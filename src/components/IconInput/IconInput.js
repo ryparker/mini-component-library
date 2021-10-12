@@ -8,63 +8,84 @@ import VisuallyHidden from '../VisuallyHidden';
 
 const SIZES = {
   small: {
-    borderSize: '1px',
-    iconSize: '10px',
-    fontSize: '14px',
+    borderThickness: 1,
+    iconSize: 16,
+    fontSize: 14,
+    height: 24,
   },
   large: {
-    borderSize: '2px',
-    iconSize: '16px',
-    fontSize: '18px',
+    borderThickness: 2,
+    iconSize: 24,
+    fontSize: 18,
+    height: 36,
   },
 };
 
-const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
-  const { borderSize, iconSize, fontSize } = SIZES[size];
+const IconInput = ({ label, icon, width = 250, size, ...delegated }) => {
+  const styles = SIZES[size];
+
+  if (!styles) {
+    throw new Error(`Invalid IconInput size: ${size}`);
+  }
+
   return (
-    <Wrapper borderSize={borderSize} width={width}>
+    <Wrapper>
       <VisuallyHidden>{label}</VisuallyHidden>
-      <InlineIcon id={icon} size={iconSize} fontSize={fontSize} />
-      <TextInput placeholder={placeholder} iconSize={iconSize} />
+      <IconWrapper
+        style={{
+          // @ts-ignore - TS doesn't like CSS vars
+          '--size': styles.iconSize + 'px',
+        }}
+      >
+        <Icon id={icon} size={styles.iconSize} />
+      </IconWrapper>
+      <TextInput
+        {...delegated}
+        style={{
+          // @ts-ignore - TS doesn't like CSS vars
+          '--width': width + 'px',
+          // Scale height with user default font-size.
+          '--height': styles.height / 16 + 'rem',
+          '--border-thickness': styles.borderThickness + 'px',
+          '--font-size': styles.fontSize / 16 + 'rem',
+        }}
+      />
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
-  width: ${(p) => p.width};
-  border-bottom: ${(p) => p.borderSize} solid ${COLORS.black};
+const Wrapper = styled.label`
+  display: block;
+  position: relative;
+  color: ${COLORS.gray700};
 
-  :hover {
-    border-bottom: 2px solid ${COLORS.black};
+  &:hover {
+    color: ${COLORS.black};
   }
 `;
 
-const InlineIcon = styled(Icon)`
-  display: inline-block;
-  color: ${COLORS.gray700};
-
-  ${Wrapper}:hover & {
-    color: ${COLORS.black};
-  }
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: auto 0;
+  height: var(--size);
 `;
 
 const TextInput = styled.input`
-  display: inline-block;
+  width: var(--width);
+  height: var(--height);
+  padding-left: var(--height);
   border: none;
-  font-size: ${(p) => p.fontSize};
-  margin-left: 2px;
-  color: ${COLORS.gray700};
-  font-weight: bold;
-  width: calc(100% - ${(p) => p.iconSize} - 2px);
-  padding-bottom: 4px;
+  border-bottom: var(--border-thickness) solid ${COLORS.black};
+  font-size: var(--font-size);
+  font-weight: 700;
+  color: inherit;
+  outline-offset: 2px;
 
-  ::placeholder {
+  &::placeholder {
+    font-weight: 400;
     color: ${COLORS.gray500};
-    font-weight: normal;
-  }
-
-  ${Wrapper}:hover & {
-    color: ${COLORS.black};
   }
 `;
 

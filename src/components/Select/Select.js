@@ -53,6 +53,7 @@ const PresentationalBit = styled.div`
   border-radius: 8px;
 
   ${NativeSelect}:focus + & {
+    /* Fallback for windows */
     outline: 1px dotted #212121;
     outline: 5px auto -webkit-focus-ring-color;
   }
