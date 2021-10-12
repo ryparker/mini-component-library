@@ -22,14 +22,11 @@ const SIZES = {
 const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
   const { borderSize, iconSize, fontSize } = SIZES[size];
   return (
-    <>
+    <Wrapper borderSize={borderSize} width={width}>
       <VisuallyHidden>{label}</VisuallyHidden>
-
-      <Wrapper borderSize={borderSize} width={width}>
-        <InlineIcon id={icon} size={iconSize} fontSize={fontSize} />
-        <TextInput placeholder={placeholder} iconSize={iconSize} />
-      </Wrapper>
-    </>
+      <InlineIcon id={icon} size={iconSize} fontSize={fontSize} />
+      <TextInput placeholder={placeholder} iconSize={iconSize} />
+    </Wrapper>
   );
 };
 
