@@ -9,10 +9,23 @@ const Select = ({ label, value, onChange, children }) => {
   const displayedValue = getDisplayedValue(value, children);
 
   return (
-    <select value={value} onChange={onChange}>
+    <Wrapper value={value} onChange={onChange}>
       {children}
-    </select>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.select`
+  width: ${(props) => props.value?.length * 17}px;
+  height: 43px;
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: ${COLORS.transparentGray15};
+  color: ${COLORS.gray700};
+
+  &:focus {
+    color: ${COLORS.black};
+  }
+`;
 
 export default Select;
